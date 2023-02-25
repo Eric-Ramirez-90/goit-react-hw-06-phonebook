@@ -1,4 +1,7 @@
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { addcontact } from 'redux/contactsSlice';
+import { toast } from 'react-toastify';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { Button, FormError, Input, Label, Wrapper } from './ContactForm.styled';
@@ -37,9 +40,30 @@ const initialValues = {
   number: '',
 };
 
-function ContactForm({ onSubmit }) {
-  const createContact = (values, { resetForm }) => {
-    onSubmit(values);
+function ContactForm() {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const createContact = ({ name, number }, { resetForm }) => {
+    if (
+      contacts.find(
+        contact =>
+          contact.name.toLocaleLowerCase().trim() ===
+          name.toLocaleLowerCase().trim()
+      )
+    ) {
+      toast.error(`${name} is already in contacts`, { theme: 'colored' });
+      return;
+    }
+
+    if (contacts.find(contact => contact.number === number)) {
+      toast.error(`This ${number} is already in contacts`, {
+        theme: 'colored',
+      });
+      return;
+    }
+
+    dispatch(addcontact({ name, number }));
     resetForm();
   };
 
@@ -69,9 +93,5 @@ function ContactForm({ onSubmit }) {
     </div>
   );
 }
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
 
 export default ContactForm;
