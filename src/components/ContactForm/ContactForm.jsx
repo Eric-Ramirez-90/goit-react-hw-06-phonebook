@@ -78,12 +78,22 @@ function ContactForm() {
           <Wrapper>
             <Label>
               Name
-              <Input type="text" name="name" validate={validateName} />
+              <Input
+                type="text"
+                name="name"
+                placeholder="Mark Twain"
+                validate={validateName}
+              />
               <FormError name="name" />
             </Label>
             <Label>
               Number
-              <Input type="tel" name="number" validate={validateNumber} />
+              <Input
+                type="tel"
+                name="number"
+                placeholder="123-45-67"
+                validate={validateNumber}
+              />
               <FormError name="number" />
             </Label>
             <Button type="submit">Add contact</Button>
